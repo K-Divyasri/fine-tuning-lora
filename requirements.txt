@@ -1,0 +1,16 @@
+# Core (everything runs offline, on CPU, with just these) ----------------------
+numpy>=1.26          # the "model" -- a small neural net, hand-written
+pandas>=2.0          # tables in the Streamlit app
+streamlit>=1.30      # the web UI (app.py)
+matplotlib>=3.7      # loss-curve and comparison charts in notebooks/labs
+
+# Testing ----------------------------------------------------------------------
+pytest>=8.0
+
+# Optional: the REAL fine-tune (see real_finetune/) -- NOT needed for this package,
+# only if you run the real GPU notebook on Colab/Kaggle:
+# transformers>=4.40
+# peft>=0.10
+# datasets>=2.19
+# accelerate>=0.30
+# trl>=0.9
