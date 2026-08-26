@@ -1,14 +1,13 @@
 # The real thing: fine-tuning an actual open LLM with LoRA on a free GPU
 
-Everything in `build_from_scratch/finetune_lab/` runs on a plain CPU because it's a
+Everything in `finetune_lab/` runs on a plain CPU because it's a
 small numpy network -- perfect for SEEING every gradient, but it is not a real
 language model. This folder is the honest bridge to the real thing.
 
-**This code is NOT run as part of the local project** — it needs a GPU this
-machine doesn't have set up for it (see `knowledge/02_setup_and_environment.md` for
-why), and downloads several GB of model weights. It is written to be copied into a
-free Google Colab or Kaggle notebook and run there, in about 10-15 minutes on a
-free T4 GPU.
+**This code is NOT run as part of the local project**: it needs a GPU this
+machine doesn't have set up for it, and downloads several GB of model weights.
+It is written to be copied into a free Google Colab or Kaggle notebook and run
+there, in about 10-15 minutes on a free T4 GPU.
 
 ## What it does
 
@@ -17,12 +16,12 @@ instruction-tuned model that behaves well on a free T4) with LoRA to do the exac
 same task as the toy project: classify a support ticket into billing / technical /
 account / shipping. It uses:
 
-- **Unsloth** — patches Hugging Face `transformers` to fine-tune ~2x faster and with
+- **Unsloth**: patches Hugging Face `transformers` to fine-tune ~2x faster and with
   less memory, purpose-built for free-tier Colab/Kaggle GPUs.
-- **PEFT** (`LoraConfig`) — the real LoRA implementation. Compare its parameters
+- **PEFT** (`LoraConfig`): the real LoRA implementation. Compare its parameters
   (`r`, `lora_alpha`, `target_modules`) to `finetune_lab/lora.py`'s `rank` and
   `scaling` -- same idea, industrial version.
-- **TRL** (`SFTTrainer`) — the standard supervised fine-tuning loop (this replaces
+- **TRL** (`SFTTrainer`): the standard supervised fine-tuning loop (this replaces
   `finetune_lab/train.py`'s hand-written loop with a battle-tested one).
 
 ## How to run it
@@ -42,5 +41,3 @@ Toy project: `net.W1` frozen, `LoRA(A, B)` patches it, `numpy` backprop trains i
 Real thing: the base model's attention/MLP weight matrices are frozen, `LoraConfig`
 patches them the same way, `SFTTrainer` trains it. You already understand the shape
 of what's happening -- only the scale changed.
-
-See `knowledge/10_real_finetune_unsloth_hf.md` for the concept-by-concept mapping.
