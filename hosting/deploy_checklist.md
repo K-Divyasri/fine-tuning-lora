@@ -2,7 +2,7 @@
 
 This is the project's "definition of done." Walk it top to bottom. Don't tick a box
 you haven't actually verified by running the command — "should work" isn't the same
-as "works." Commands assume you're inside `build_from_scratch/` unless noted.
+as "works." Commands assume you're at the repo root unless noted.
 
 ## Runs locally
 
@@ -30,14 +30,14 @@ as "works." Commands assume you're inside `build_from_scratch/` unless noted.
 
 ## Tests pass
 
-- [ ] `pytest` run from inside `build_from_scratch/` is all green — 27 tests, all
+- [ ] `pytest` run from the repo root is all green — 27 tests, all
       offline, all CPU.
 - [ ] You ran it in the fresh venv, not just your everyday one, so you know the deps
       in `requirements.txt` are complete.
 
 ## No secrets to worry about (and confirm that's still true)
 
-- [ ] `build_from_scratch/` makes zero LLM/API calls — there should be no `.env`,
+- [ ] The code makes zero LLM/API calls — there should be no `.env`,
       no API key, nothing hardcoded. Confirm there isn't one hiding:
       `git ls-files | Select-String ".env"` should print nothing.
 - [ ] If you ran `real_finetune/` on Colab, confirm you did **not** paste your
@@ -61,8 +61,8 @@ as "works." Commands assume you're inside `build_from_scratch/` unless noted.
       `fine-tuning-lora`, public.
 - [ ] `git init` → `git add .` → `git commit` → `git branch -M main` →
       `git remote add origin ...` → `git push -u origin main` all done, from the
-      **project root** (the folder containing `build_from_scratch/`).
-- [ ] The small CSVs under `data/` and `build_from_scratch/data/` are committed
+      **project root** (the folder containing `hosting/`).
+- [ ] The small CSVs under `data/` are committed
       (that's on purpose — deterministic, tiny, and it means the app and notebooks
       work the moment someone clones).
 - [ ] `.github/workflows/ci.yml` is committed and pushed.
@@ -74,7 +74,7 @@ as "works." Commands assume you're inside `build_from_scratch/` unless noted.
 ## Live app is up (Path A)
 
 - [ ] Deployed via Hugging Face Spaces (Streamlit SDK) **or** Streamlit Community
-      Cloud (main file `build_from_scratch/app.py`).
+      Cloud (main file `app.py`).
 - [ ] For Spaces: `app.py`, the whole `finetune_lab/` folder, `requirements.txt`, and
       the `data/` CSVs are at the Space root; the build log is clean.
 - [ ] Open the live URL — the comparison table and bar chart render, the sliders

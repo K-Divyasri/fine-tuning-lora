@@ -4,7 +4,7 @@ This project is a little different from the others in the roadmap, so read this 
 before you start: there are **two separate things you can host**, and they don't need
 the same machine.
 
-1. **The comparison app** (`build_from_scratch/app.py`) — a Streamlit demo that trains
+1. **The comparison app** (`app.py`) — a Streamlit demo that trains
    all five methods (prompt, RAG, base, full fine-tune, LoRA) on a small numpy network
    and shows the comparison table live in the browser. This is CPU-only, takes well
    under a second to train, and is what most people should host. **Path A** below.
@@ -24,24 +24,21 @@ server you pay for.
 
 ```
 19-fine-tuning-lora/              <- this whole folder becomes your GitHub repo
-├── build_from_scratch/           <- the real package + app live here
-│   ├── app.py                    <- the Streamlit comparison app
-│   ├── finetune_lab/             <- the package app.py imports
-│   ├── requirements.txt
-│   ├── data/                     <- train.csv / val.csv / test.csv (small, committed)
-│   ├── tests/                    <- 27 offline, CPU-only tests
-│   ├── real_finetune/            <- Colab-only real GPU LoRA fine-tune (not run here)
-│   └── generate_data.py
+├── app.py                        <- the Streamlit comparison app
+├── finetune_lab/                 <- the package app.py imports
+├── requirements.txt
+├── data/                         <- train.csv / val.csv / test.csv (small, committed)
+├── tests/                        <- 27 offline, CPU-only tests
+├── real_finetune/                <- Colab-only real GPU LoRA fine-tune (not run here)
+├── generate_data.py              <- rebuilds data\*.csv
 ├── hosting/                      <- you are here
 ├── knowledge/, notebooks/, labs/ <- the teaching material
-├── data/                         <- a second copy of the CSVs for notebooks/labs
-├── generate_data.py              <- rebuilds data\*.csv at the project root
 └── README.md
 ```
 
 - **GitHub gets the whole `19-fine-tuning-lora/` folder.** The CI workflow and the
   root README are written for that.
-- **The live app is deployed separately** (Path A), and it deploys `build_from_scratch/app.py`
+- **The live app is deployed separately** (Path A), and it deploys `app.py`
   plus the `finetune_lab/` package it imports.
 - **The LoRA adapter (if you make one) is hosted on the Hugging Face Hub**, completely
   separate from GitHub and from the Streamlit app — see Path B.
@@ -69,10 +66,10 @@ git config --global user.email "mathuransada@gmail.com"
 
 ### There's no API key here — but check the .gitignore anyway
 
-This project's core (`build_from_scratch/`) makes zero LLM calls. No `.env`, no key,
+This project's core (`finetune_lab/` and `app.py`) makes zero LLM calls. No `.env`, no key,
 no secret, nothing to leak. That's genuinely unusual for this roadmap — enjoy it.
 
-The one thing worth excluding is still the usual Python junk. `build_from_scratch/.gitignore`
+The one thing worth excluding is still the usual Python junk. The root `.gitignore`
 already lists:
 
 ```
@@ -87,7 +84,7 @@ Plus, if you ever run `real_finetune/` on Colab and download its output locally,
 are big model-adapter working directories, not something you want in a Git repo (the
 Hub, not GitHub, is where a trained adapter belongs — see Path B).
 
-One deliberate **inclusion**: the small CSVs under `data/` and `build_from_scratch/data/`
+One deliberate **inclusion**: the small CSVs under `data/`
 (`train.csv`, `val.csv`, `test.csv`) are committed on purpose. They're tiny, generated
 by a fixed random seed, and committing them means the app and notebooks work the moment
 someone clones — no build step needed.
@@ -95,7 +92,7 @@ someone clones — no build step needed.
 ### Make the repo and push
 
 Run these from the **project root** — the `19-fine-tuning-lora/` folder, the one with
-`build_from_scratch/` and this `hosting/` folder inside it.
+this `hosting/` folder inside it.
 
 ```powershell
 cd ai\19-fine-tuning-lora
@@ -170,8 +167,8 @@ natively. Official docs: <https://huggingface.co/docs/hub/en/spaces-sdks-streaml
 5. Leave hardware on the free **CPU basic** tier — this app never touches a GPU, the
    whole "model" is a numpy array. Click **Create Space**.
 
-A Space is itself a Git repo and expects the app at its **root**. Our files live inside
-`build_from_scratch/`, so upload *their contents* to the Space root. What the Space
+A Space is itself a Git repo and expects the app at its **root**. Our files sit at the
+repo root, so upload them to the Space root as they are. What the Space
 needs:
 
 - `app.py` — the Streamlit app
@@ -183,7 +180,7 @@ needs:
 
 Easiest path for a beginner: on your Space page, the **Files** tab → **Add file** →
 **Upload files**. Drag in `app.py`, `requirements.txt`, the whole `finetune_lab` folder,
-and the `data` folder — all from `build_from_scratch/`. Commit.
+and the `data` folder — all from the repo root. Commit.
 
 > You do **not** need to upload `tests/`, `generate_data.py`, or `real_finetune/` — the
 > app doesn't use any of them.
@@ -201,8 +198,8 @@ page: <https://streamlit.io/cloud>.
 1. Sign in with your GitHub account, granting it read access to your repos.
 2. **Create app** → **Deploy a public app from GitHub**.
 3. **Repository:** `YOURNAME/fine-tuning-lora`. **Branch:** `main`.
-4. **Main file path:** point it at **`build_from_scratch/app.py`** (not just `app.py`,
-   because the app lives in the subfolder). Because you pushed the whole repo, the
+4. **Main file path:** point it at **`app.py`** (it sits at the repo root).
+   Because you pushed the whole repo, the
    `data/` CSVs and `finetune_lab/` package are already there next to `app.py`.
 5. Click **Deploy**. It reads `requirements.txt` next to `app.py`, installs the deps,
    and launches. A minute later you have a public `*.streamlit.app` URL.
@@ -214,7 +211,7 @@ Either option works and both are free. No API key, no Secrets panel needed for e
 
 ## Path B (optional) — host a real trained LoRA adapter on the Hugging Face Hub
 
-Only do this if you actually opened `build_from_scratch/real_finetune/README.md`,
+Only do this if you actually opened `real_finetune/README.md`,
 copied `real_lora_finetune.py` into a Colab notebook, picked a free **T4 GPU** runtime,
 and ran it end to end on `Qwen2.5-0.5B-Instruct`. That run produces a trained LoRA
 adapter — just the small `A`/`B` matrices PEFT learned, typically a few megabytes,
