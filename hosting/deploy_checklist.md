@@ -30,14 +30,14 @@ as "works." Commands assume you're at the repo root unless noted.
 
 ## Tests pass
 
-- [ ] `pytest` run from the repo root is all green — 27 tests, all
+- [ ] `pytest` run from the repo root is all green - 27 tests, all
       offline, all CPU.
 - [ ] You ran it in the fresh venv, not just your everyday one, so you know the deps
       in `requirements.txt` are complete.
 
 ## No secrets to worry about (and confirm that's still true)
 
-- [ ] The code makes zero LLM/API calls — there should be no `.env`,
+- [ ] The code makes zero LLM/API calls - there should be no `.env`,
       no API key, nothing hardcoded. Confirm there isn't one hiding:
       `git ls-files | Select-String ".env"` should print nothing.
 - [ ] If you ran `real_finetune/` on Colab, confirm you did **not** paste your

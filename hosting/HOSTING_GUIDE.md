@@ -4,7 +4,7 @@ This project is a little different from the others in the roadmap, so read this 
 before you start: there are **two separate things you can host**, and they don't need
 the same machine.
 
-1. **The comparison app** (`app.py`) — a Streamlit demo that trains
+1. **The comparison app** (`app.py`) - a Streamlit demo that trains
    all five methods (prompt, RAG, base, full fine-tune, LoRA) on a small numpy network
    and shows the comparison table live in the browser. This is CPU-only, takes well
    under a second to train, and is what most people should host. **Path A** below.
@@ -180,7 +180,7 @@ needs:
 
 Easiest path for a beginner: on your Space page, the **Files** tab → **Add file** →
 **Upload files**. Drag in `app.py`, `requirements.txt`, the whole `finetune_lab` folder,
-and the `data` folder — all from the repo root. Commit.
+and the `data` folder - all from the repo root. Commit.
 
 > You do **not** need to upload `tests/`, `generate_data.py`, or `real_finetune/` — the
 > app doesn't use any of them.
